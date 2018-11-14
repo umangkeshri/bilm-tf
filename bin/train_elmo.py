@@ -10,6 +10,7 @@ from bilm.data import BidirectionalLMDataset
 def main(args):
     # load the vocab
     vocab = load_vocab(args.vocab_file, 50)
+    restart_ckpt_file = args.restart_ckpt_file
 
     # define the options
     batch_size = 128  # batch size for each GPU
@@ -33,9 +34,9 @@ def main(args):
       'max_characters_per_token': 50,
       'n_characters': 261,
       'n_highway': 2},
-    
+
      'dropout': 0.1,
-    
+
      'lstm': {
       'cell_clip': 3,
       'dim': 4096,
@@ -43,9 +44,9 @@ def main(args):
       'proj_clip': 3,
       'projection_dim': 512,
       'use_skip_connections': True},
-    
+
      'all_clip_norm_val': 10.0,
-    
+
      'n_epochs': 10,
      'n_train_tokens': n_train_tokens,
      'batch_size': batch_size,
@@ -60,7 +61,7 @@ def main(args):
 
     tf_save_dir = args.save_dir
     tf_log_dir = args.save_dir
-    train(options, data, n_gpus, tf_save_dir, tf_log_dir)
+    train(options, data, n_gpus, tf_save_dir, tf_log_dir,restart_ckpt_file)
 
 
 if __name__ == '__main__':
@@ -68,6 +69,7 @@ if __name__ == '__main__':
     parser.add_argument('--save_dir', help='Location of checkpoint files')
     parser.add_argument('--vocab_file', help='Vocabulary file')
     parser.add_argument('--train_prefix', help='Prefix for train files')
+    parser.add_argument('--restart_ckpt_file', help='latest checkpoint file to start with')
 
     args = parser.parse_args()
     main(args)
